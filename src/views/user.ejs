@@ -14,10 +14,14 @@
 
 <body>
   <div class="user-infor-container">
-    <form method="POST" action="/user/create-user">
-      <div class="container">
-        <div class="row">
-          <div class="my-3 col-6">
+    <div class="container">
+      <div class="row">
+        <div class="abc">
+
+        </div>
+        <form method="POST" action="/user/create-user">
+          <h4 class="col-12 mt-3 ">Create a new user :</h4>
+          <div class="mt-1 mb-3 col-6">
             <label for="email" class="form-label">Email address</label>
             <input type="email" class="form-control" id="email" name="email" />
           </div>
@@ -35,9 +39,40 @@
           <div class="col-12">
             <button type="submit" class="btn btn-primary">Submit</button>
           </div>
+        </form>
+        <div className="table-container">
+          <table class="table table-hover table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Email</th>
+                <th scope="col">Username</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% userList.forEach(function(item,index){ %>
+                <tr>
+                  <th scope="row">
+                    <%= index +1 %>
+                  </th>
+                  <td>
+                    <%= item.email%>
+                  </td>
+                  <td>
+                    <%= item.username%>
+                  </td>
+                  <td>
+                    <button class="btn btn-warning">Edit</button>
+                    <button class="btn btn-danger">Delete</button>
+                  </td>
+                </tr>
+                <% }) %>
+            </tbody>
+          </table>
         </div>
       </div>
-    </form>
+    </div>
   </div>
 </body>
 
