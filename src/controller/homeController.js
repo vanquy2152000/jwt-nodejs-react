@@ -45,6 +45,7 @@ const handleUpdateUser = async (req, res) => {
     return res.redirect("/user")
 }
 
+
 module.exports = {
     handleHelloWorld, handlePageUser, handleCreateUser, handleDeleteUser, getUpdateUserPage, handleUpdateUser
 }
