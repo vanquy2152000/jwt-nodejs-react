@@ -103,7 +103,6 @@ const loginUser = async (rawData) => {
             let data = user.get({ plain: true })
             let isCorrectPassword = comparePassword(rawData.password, user.password)
 
-            console.log("check iscorrect password : ", isCorrectPassword)
             if (isCorrectPassword === true) {
 
                 return {

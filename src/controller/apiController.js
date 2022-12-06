@@ -27,7 +27,6 @@ const handleRegister = async (req, res) => {
 
         // service : create new user
         let data = await loginRegisterService.registerNewUser(req.body);
-        console.log("check data ", data)
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
