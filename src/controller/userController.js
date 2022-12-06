@@ -38,7 +38,6 @@ const createFunc = async (req, res) => {
     try {
         let data = await userApiService.createNewUser(req.body)
 
-        console.log("check data create : ", data)
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
@@ -56,7 +55,13 @@ const createFunc = async (req, res) => {
 
 const updateFunc = async (req, res) => {
     try {
-        let data = await userApiService.updateUser()
+        let data = await userApiService.updateUser(req.body)
+        
+        return res.status(200).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: data.DT
+        })
 
     } catch (e) {
         return res.status(500).json({
