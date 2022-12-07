@@ -1,6 +1,10 @@
+require("dotenv").config();
 import db from '../models/index'
 import { Op } from 'sequelize';
 import bcrypt from 'bcryptjs';
+import { getGroupWithRoles } from './JWTService';
+import { createJWT } from '../middleware/JWTAction'
+
 
 const generateHash = (password) => {
     const salt = bcrypt.genSaltSync(10);
@@ -11,11 +15,11 @@ const generateHash = (password) => {
 const comparePassword = (password, hash) => {
 
     let result = bcrypt.compareSync(password, hash)
-    if (result) {
-        console.log("Password correct");
-    } else {
-        console.log("Password wrong");
-    }
+    // if (result) {
+    //     console.log("Password correct");
+    // } else {
+    //     console.log("Password wrong");
+    // }
     return result
 }
 // console.log(comparePassword("1234", "$2a$10$IOB1TCeSReGQGjBhA5JQlOFf4SO/gMBCXreJg2vQD8mNnu6jpw486"))
@@ -45,7 +49,6 @@ const checkPhoneExist = async (userPhone) => {
 
 const registerNewUser = async (rawUserData) => {
     try {
-
         // validata check email,phone exist
         let isEmailExist = await checkEmailExist(rawUserData.email)
         if (isEmailExist === true) {
@@ -72,6 +75,7 @@ const registerNewUser = async (rawUserData) => {
             username: rawUserData.username,
             password: hashpassword,
             phone: rawUserData.phone,
+            groupId: 4
         })
         let data = user.get({ plain: true })
 
@@ -100,15 +104,23 @@ const loginUser = async (rawData) => {
         })
 
         if (user) {
-            let data = user.get({ plain: true })
             let isCorrectPassword = comparePassword(rawData.password, user.password)
-
             if (isCorrectPassword === true) {
+                let groupWithRoles = await getGroupWithRoles(user)
+                let payload = {
+                    email: user.email,
+                    group: groupWithRoles,
+                    expiresIn: process.env.JWT_EXPIRES_IN
+                }
+                let token = createJWT(payload)
 
                 return {
                     EM: 'ok!',
                     EC: 0,
-                    DT: data
+                    DT: {
+                        access_Token: token,
+                        groupWithRoles
+                    }
                 }
             }
         }

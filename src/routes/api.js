@@ -2,15 +2,16 @@ import express from 'express';
 import apiController from '../controller/apiController'
 import userController from '../controller/userController'
 import groupController from '../controller/groupController'
+import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction'
 
 let router = express.Router();
 
 const initApiRoutes = (app) => {
-    //test api
-    router.get("/test-api", apiController.testApi);
+
+    router.all('*', checkUserJWT, checkUserPermission);
+
     router.post("/register", apiController.handleRegister)
     router.post("/login", apiController.handleLogin)
-
     // rest api
     // CRUD - Create, Read, Update, Delete
     router.get('/user/read', userController.readFunc)
