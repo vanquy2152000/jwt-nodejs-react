@@ -38,6 +38,7 @@ const checkUserJWT = (req, res, next) => {
 
         if (decoded) {
             req.user = decoded
+            req.token = token
             next();
         } else {
             return res.status(401).json({
@@ -56,10 +57,10 @@ const checkUserJWT = (req, res, next) => {
     }
 }
 
+//check quyen cua user
 const checkUserPermission = (req, res, next) => {
-    if (nonSecurePaths.includes(req.path)) return next();
-
-    console.log("user token : ", req.user);
+    if (nonSecurePaths.includes(req.path) || req.path === '/account') return next();
+    console.log("req path ", req.path);
     if (req.user) {
         let email = req.user.email;
         let roles = req.user.group.Roles;
@@ -83,9 +84,6 @@ const checkUserPermission = (req, res, next) => {
                 DT: ''
             })
         }
-
-        console.log('check email : ', email);
-        console.log("check roles", roles)
 
     } else {
         return res.status(403).json({

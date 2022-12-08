@@ -12,6 +12,9 @@ const initApiRoutes = (app) => {
 
     router.post("/register", apiController.handleRegister)
     router.post("/login", apiController.handleLogin)
+
+    // Luu account user vao jwt
+    router.get("/account", userController.getUserAccount)
     // rest api
     // CRUD - Create, Read, Update, Delete
     router.get('/user/read', userController.readFunc)

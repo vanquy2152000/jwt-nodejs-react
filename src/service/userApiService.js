@@ -128,8 +128,6 @@ const createNewUser = async (data) => {
             }
         )
 
-        console.log("check user", user)
-
         return {
             EM: 'Create user ok',
             EC: 0,
@@ -159,8 +157,6 @@ const updateUser = async (data) => {
         let user = await db.User.findOne({
             where: { id: data.id }
         })
-        console.log("check user", user)
-        console.log("check data : ", data)
         if (user) {
             await user.update({
                 username: data.username,
