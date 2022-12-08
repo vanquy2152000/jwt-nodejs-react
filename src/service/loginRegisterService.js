@@ -111,7 +111,6 @@ const loginUser = async (rawData) => {
                     email: user.email,
                     username: user.username,
                     group: groupWithRoles,
-                    expiresIn: process.env.JWT_EXPIRES_IN,
                 }
                 let token = createJWT(payload)
 
