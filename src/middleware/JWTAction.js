@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 require("dotenv").config();
 
-const nonSecurePaths = ['/', '/register', '/login'];
+const nonSecurePaths = ['/', '/register', '/login', '/logout'];
 
 const createJWT = (payload) => {
     let key = process.env.JWT_SECRET
@@ -27,13 +27,23 @@ const verifyToken = (token) => {
     return decoded;
 }
 
+const extractToken = (req) => {
+    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+        let token = req.headers.authorization.split(' ')[1];
+        return token;
+    }
+    return null;
+}
+
 // Check nguoi dung da dang nhap hay chua
 const checkUserJWT = (req, res, next) => {
     if (nonSecurePaths.includes(req.path)) return next();
 
+    let tokenFromHeader = extractToken(req);
+
     let cookies = req.cookies;
-    if (cookies && cookies.jwt) {
-        let token = cookies.jwt
+    if ((cookies && cookies.jwt) || tokenFromHeader) {
+        let token = cookies && cookies.jwt ? cookies.jwt : tokenFromHeader
         let decoded = verifyToken(token)
 
         if (decoded) {
@@ -60,7 +70,7 @@ const checkUserJWT = (req, res, next) => {
 //check quyen cua user
 const checkUserPermission = (req, res, next) => {
     if (nonSecurePaths.includes(req.path) || req.path === '/account') return next();
-    console.log("req path ", req.path);
+
     if (req.user) {
         let email = req.user.email;
         let roles = req.user.group.Roles;

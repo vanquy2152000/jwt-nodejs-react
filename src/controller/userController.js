@@ -105,6 +105,7 @@ const getUserAccount = (req, res) => {
     })
 }
 
+
 module.exports = {
-    readFunc, createFunc, updateFunc, deleteFunc, getUserAccount
+    readFunc, createFunc, updateFunc, deleteFunc, getUserAccount, 
 }

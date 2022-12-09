@@ -13,6 +13,8 @@ const initApiRoutes = (app) => {
     router.post("/register", apiController.handleRegister)
     router.post("/login", apiController.handleLogin)
 
+    //log out
+    router.post("/logout", apiController.handleLogout)
     // Luu account user vao jwt
     router.get("/account", userController.getUserAccount)
     // rest api
