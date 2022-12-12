@@ -6,8 +6,7 @@ const readFunc = async (req, res) => {
             let page = req.query.page;
             let limit = req.query.limit
 
-            let data = await userApiService.getUserWithPagination(+page, +limit);
-
+            let data = await roleApiService.getRoleWithPagination(+page, +limit);
 
             return res.status(200).json({
                 EM: data.EM,
@@ -15,7 +14,7 @@ const readFunc = async (req, res) => {
                 DT: data.DT
             })
         } else {
-            let data = await userApiService.getAllUser();
+            let data = await roleApiService.getAllRoles();
 
             return res.status(200).json({
                 EM: data.EM,
@@ -37,8 +36,8 @@ const readFunc = async (req, res) => {
 
 const createFunc = async (req, res) => {
     try {
+
         let data = await roleApiService.createNewRoles(req.body)
-        console.log(data)
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
@@ -57,8 +56,8 @@ const createFunc = async (req, res) => {
 
 const updateFunc = async (req, res) => {
     try {
-        let data = await userApiService.updateUser(req.body)
-
+        let data = await roleApiService.updateRole(req.body)
+        console.log(data)
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
@@ -76,7 +75,7 @@ const updateFunc = async (req, res) => {
 
 const deleteFunc = async (req, res) => {
     try {
-        let data = await userApiService.deleteUser(req.body)
+        let data = await roleApiService.deleteRole(req.body.id)
 
         return res.status(200).json({
             EM: data.EM,
