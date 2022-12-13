@@ -6,7 +6,6 @@ const getAllRoles = async () => {
             order: [["id", "DESC"]],
             raw: true
         })
-        console.log("get all")
         if (roles) {
             return {
                 EM: "Get data success",
@@ -64,6 +63,62 @@ const getRoleWithPagination = async (page, limit) => {
     }
 }
 
+const getRoleByGroup = async (id) => {
+    try {
+        if (!id) {
+            return {
+                EM: 'Not found any roles',
+                EC: 1,
+                DT: []
+            }
+        }
+        let roles = await db.Group.findOne({
+            where: { id: id },
+            attributes: ["id", "name", "description"],
+            include: [{
+                model: db.Role,
+                attributes: ["id", "url", "description"],
+                through: { attributes: [] }
+            }]
+        })
+        return {
+            EM: "Get roles by group succeeds",
+            EC: 0,
+            DT: roles
+        }
+    } catch (e) {
+        return {
+            EM: "error from service...",
+            EC: -2,
+            DT: []
+        }
+    }
+}
+
+const assignRoleToGroup = async (data) => {
+    try {
+        // data = { groupId: , groupRoles: [{ groupId }, { roleId }] }
+        console.log("check data ", data)
+        await db.Group_Role.destroy({
+            where: { groupId: +data.groupId }
+        })
+        await db.Group_Role.bulkCreate(data.groupRoles)
+        return {
+            EM: 'Assign role to group succeeds',
+            EC: 0,
+            DT: []
+        }
+
+    } catch (e) {
+        console.log("check e", e)
+        return {
+            EM: "error from service...",
+            EC: -2,
+            DT: []
+        }
+    }
+}
+
 const createNewRoles = async (roles) => {
     try {
         let currentRoles = await db.Role.findAll({
@@ -102,10 +157,10 @@ const createNewRoles = async (roles) => {
 
 const updateRole = async (data) => {
     try {
+
         let role = await db.Role.findOne({
             where: { id: data.id }
         })
-        console.log("check role", role)
         if (role) {
             await role.update({
                 url: data.url,
@@ -124,6 +179,7 @@ const updateRole = async (data) => {
             }
         }
     } catch (e) {
+        console.log(e)
         return {
             EM: 'Error from service...',
             EC: -2,
@@ -165,5 +221,5 @@ const deleteRole = async (id) => {
 }
 
 module.exports = {
-    createNewRoles, getAllRoles, getRoleWithPagination, deleteRole, updateRole,
+    createNewRoles, getAllRoles, getRoleWithPagination, deleteRole, updateRole, getRoleByGroup, assignRoleToGroup
 }

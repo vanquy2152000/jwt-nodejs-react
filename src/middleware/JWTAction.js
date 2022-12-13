@@ -74,7 +74,7 @@ const checkUserPermission = (req, res, next) => {
     if (req.user) {
         let email = req.user.email;
         let roles = req.user.group.Roles;
-        let currentPath = req.path;
+        let currentUrl = req.path;
 
         if (!roles && roles.length === 0) {
             return res.status(403).json({
@@ -84,7 +84,7 @@ const checkUserPermission = (req, res, next) => {
             })
         }
 
-        let canAccess = roles.some(item => item.url === currentPath);
+        let canAccess = roles.some(item => item.url === currentUrl || currentUrl.includes(item.url));
         if (canAccess === true) {
             next();
         } else {
